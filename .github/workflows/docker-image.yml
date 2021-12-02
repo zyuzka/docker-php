@@ -16,6 +16,9 @@ jobs:
         include:
           - image: 'alpine/3.12/7.3/Dockerfile'
             tag: "$ORGA/php:latest"
+
+          - image: 'alpine/3.12/7.3/Dockerfile'
+            tag: "$ORGA/php:7.3"
 #            tag: ["$ORGA/php:latest", "$ORGA/php:7.3", "$ORGA/php:7.4-alpine3.12"]
     steps:
       - name: Checkout
