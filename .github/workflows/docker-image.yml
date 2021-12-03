@@ -36,7 +36,7 @@ jobs:
     needs: platform-collection
     env:
       ORGA: 'zyuzka'
-    name: "Build: ${{ matrix.disto-name }} / ${{ matrix.version }} / PHP: ${{ matrix.php-version }} (${{ join(matrix.tags) }})"
+    name: Build: ${{ matrix.disto-name }} / ${{ matrix.version }} / PHP ${{ matrix.php-version }} (${{ join(matrix.tags) }})
     strategy:
       fail-fast: false
       matrix:
