@@ -52,7 +52,8 @@ jobs:
         run: docker run --privileged --rm tonistiigi/binfmt --install all
 
       - name: Build the image
-        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
+#        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
+        run: echo "docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64"
 
 
 #  join(matrix.tags, ' --tag ')
