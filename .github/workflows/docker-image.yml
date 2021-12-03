@@ -12,11 +12,12 @@ jobs:
     strategy:
       matrix:
         include:
+          # Alpine
           - image: 'alpine/3.12/7.3/Dockerfile'
-            tag: "$ORGA/php:latest"
+            tag: "$ORGA/php:latest,$ORGA/php:7.3,$ORGA/php:7.4-alpine3.12"
 
-          - image: 'alpine/3.12/7.3/Dockerfile'
-            tag: "$ORGA/php:7.3"
+#          - image: 'alpine/3.12/7.3/Dockerfile'
+#            tag: "$ORGA/php:7.3"
 #            tag: ["$ORGA/php:latest", "$ORGA/php:7.3", "$ORGA/php:7.4-alpine3.12"]
     steps:
       - name: Checkout
@@ -28,13 +29,13 @@ jobs:
         with:
           version: latest
 
-      - name: login to docker hub
+      - name: Login to docker hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Linux fix
+      - name: Install platform emulator collection
         run: docker run --privileged --rm tonistiigi/binfmt --install all
 
-      - name: Build the Docker image
+      - name: Build the image
         run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ matrix.tag }} --platform linux/amd64,linux/arm64
 
 
