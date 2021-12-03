@@ -1,0 +1,9 @@
+alpine/3.12/7.3/Dockerfile:
+  - latest
+  - 7.3
+
+alpine/3.12/7.4/Dockerfile:
+  - 7.4
+
+alpine/3.12/8.0/Dockerfile:
+  - 8.0
