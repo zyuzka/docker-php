@@ -22,6 +22,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Linux fix
+        run: docker run --privileged --rm tonistiigi/binfmt --install all
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -33,3 +36,6 @@ jobs:
 
       - name: Build the Docker image
         run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ matrix.tag }} --platform linux/amd64,linux/arm64
+
+
+#docker buildx build --push . --file alpine/3.12/7.3/Dockerfile --tag zyuzka/php:73 --platform linux/amd64,linux/arm64
