@@ -5,99 +5,103 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  generate-workkflow:
     runs-on: ubuntu-latest
-    env:
-      ORGA: 'zyuzka'
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          ### Alpine 3.11
-          - image: 'alpine/3.11/7.3/Dockerfile'
-            tags: [ "$ORGA/php:7.3-alpine3.11" ]
-            disto-name: 'Alpine'
-            version: '3.11'
-            php-version: 'php:7.3'
-          - image: 'alpine/3.11/7.4/Dockerfile'
-            tags: [ "$ORGA/php:7.4-alpine3.11" ]
-            disto-name: 'Alpine'
-            version: '3.11'
-            php-version: 'php:7.4'
-
-          ### Alpine 3.12
-          - image: 'alpine/3.12/7.3/Dockerfile'
-            tags: [ "$ORGA/php:latest", "$ORGA/php:7.3", "$ORGA/php:7.4-alpine3.12" ]
-            disto-name: 'Alpine'
-            version: '3.12'
-            php-version: 'php:7.3'
-          - image: 'alpine/3.12/7.4/Dockerfile'
-            tags: [ "$ORGA/php:7.4", "$ORGA/php:7.4-alpine3.12" ]
-            disto-name: 'Alpine'
-            version: '3.12'
-            php-version: 'php:7.4'
-          - image: 'alpine/3.12/8.0/Dockerfile'
-            tags: [ "$ORGA/php:8.0", "$ORGA/php:8.0-alpine3.12" ]
-            disto-name: 'Alpine'
-            version: '3.12'
-            php-version: 'php:8.0'
-
-          ### Alpine 3.13
-          - image: 'alpine/3.13/7.4/Dockerfile'
-            tags: [ "$ORGA/php:7.4-alpine3.13" ]
-            disto-name: 'Alpine'
-            version: '3.13'
-            php-version: 'php:7.4'
-          - image: 'alpine/3.13/8.0/Dockerfile'
-            tags: [ "$ORGA/php:8.0-alpine3.13" ]
-            disto-name: 'Alpine'
-            version: '3.13'
-            php-version: 'php:8.0'
-
-          ### Debian bullseye
-          - image: 'debian/bullseye/7.3/Dockerfile'
-            tags: [ "$ORGA/php:7.3-debian" ]
-            disto-name: 'Debian'
-            version: 'Bullseye'
-            php-version: 'php:7.3'
-          - image: 'debian/bullseye/7.4/Dockerfile'
-            tags: [ "$ORGA/php:7.4-debian" ]
-            disto-name: 'Debian'
-            version: 'Bullseye'
-            php-version: 'php:7.4'
-          - image: 'debian/bullseye/8.0/Dockerfile'
-            tags: [ "$ORGA/php:8.0-debian" ]
-            disto-name: 'Debian'
-            version: 'Bullseye'
-            php-version: 'php:8.0'
-
-          ### Debian buster
-          - image: 'debian/buster/7.3/Dockerfile'
-            tags: [ "$ORGA/php:7.3-debian-buster" ]
-            disto-name: 'Debian'
-            version: 'Buster'
-            php-version: 'php:7.3'
-          - image: 'debian/buster/7.4/Dockerfile'
-            tags: [ "$ORGA/php:7.4-debian-buster" ]
-            disto-name: 'Debian'
-            version: 'Buster'
-            php-version: 'php:7.4'
-          - image: 'debian/buster/8.0/Dockerfile'
-            tags: [ "$ORGA/php:8.0-debian-buster" ]
-            disto-name: 'Debian'
-            version: 'Buster'
-            php-version: 'php:8.0'
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          version: latest
-      - name: Login to docker hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      - name: Install platform emulator collection
-        run: docker run --privileged --rm tonistiigi/binfmt --install all
-      - name: ${{ matrix.disto-name }} / ${{ matrix.version }} / ${{ matrix.php-version }} (${{ join(matrix.tags) }})
-        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
+    - run: touch tmp.yml && git add . && git commit -m 'test' && git push
+#  build:
+#    runs-on: ubuntu-latest
+#    env:
+#      ORGA: 'zyuzka'
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        include:
+#          ### Alpine 3.11
+#          - image: 'alpine/3.11/7.3/Dockerfile'
+#            tags: [ "$ORGA/php:7.3-alpine3.11" ]
+#            disto-name: 'Alpine'
+#            version: '3.11'
+#            php-version: 'php:7.3'
+#          - image: 'alpine/3.11/7.4/Dockerfile'
+#            tags: [ "$ORGA/php:7.4-alpine3.11" ]
+#            disto-name: 'Alpine'
+#            version: '3.11'
+#            php-version: 'php:7.4'
+#
+#          ### Alpine 3.12
+#          - image: 'alpine/3.12/7.3/Dockerfile'
+#            tags: [ "$ORGA/php:latest", "$ORGA/php:7.3", "$ORGA/php:7.3-alpine3.12" ]
+#            disto-name: 'Alpine'
+#            version: '3.12'
+#            php-version: 'php:7.3'
+#          - image: 'alpine/3.12/7.4/Dockerfile'
+#            tags: [ "$ORGA/php:7.4", "$ORGA/php:7.4-alpine3.12" ]
+#            disto-name: 'Alpine'
+#            version: '3.12'
+#            php-version: 'php:7.4'
+#          - image: 'alpine/3.12/8.0/Dockerfile'
+#            tags: [ "$ORGA/php:8.0", "$ORGA/php:8.0-alpine3.12" ]
+#            disto-name: 'Alpine'
+#            version: '3.12'
+#            php-version: 'php:8.0'
+#
+#          ### Alpine 3.13
+#          - image: 'alpine/3.13/7.4/Dockerfile'
+#            tags: [ "$ORGA/php:7.4-alpine3.13" ]
+#            disto-name: 'Alpine'
+#            version: '3.13'
+#            php-version: 'php:7.4'
+#          - image: 'alpine/3.13/8.0/Dockerfile'
+#            tags: [ "$ORGA/php:8.0-alpine3.13" ]
+#            disto-name: 'Alpine'
+#            version: '3.13'
+#            php-version: 'php:8.0'
+#
+#          ### Debian bullseye
+#          - image: 'debian/bullseye/7.3/Dockerfile'
+#            tags: [ "$ORGA/php:7.3-debian" ]
+#            disto-name: 'Debian'
+#            version: 'Bullseye'
+#            php-version: 'php:7.3'
+#          - image: 'debian/bullseye/7.4/Dockerfile'
+#            tags: [ "$ORGA/php:7.4-debian" ]
+#            disto-name: 'Debian'
+#            version: 'Bullseye'
+#            php-version: 'php:7.4'
+#          - image: 'debian/bullseye/8.0/Dockerfile'
+#            tags: [ "$ORGA/php:8.0-debian" ]
+#            disto-name: 'Debian'
+#            version: 'Bullseye'
+#            php-version: 'php:8.0'
+#
+#          ### Debian buster
+#          - image: 'debian/buster/7.3/Dockerfile'
+#            tags: [ "$ORGA/php:7.3-debian-buster" ]
+#            disto-name: 'Debian'
+#            version: 'Buster'
+#            php-version: 'php:7.3'
+#          - image: 'debian/buster/7.4/Dockerfile'
+#            tags: [ "$ORGA/php:7.4-debian-buster" ]
+#            disto-name: 'Debian'
+#            version: 'Buster'
+#            php-version: 'php:7.4'
+#          - image: 'debian/buster/8.0/Dockerfile'
+#            tags: [ "$ORGA/php:8.0-debian-buster" ]
+#            disto-name: 'Debian'
+#            version: 'Buster'
+#            php-version: 'php:8.0'
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v1
+#        with:
+#          version: latest
+#      - name: Login to docker hub
+#        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+#      - name: Install platform emulator collection
+#        run: docker run --privileged --rm tonistiigi/binfmt --install all
+#      - name: ${{ matrix.disto-name }} / ${{ matrix.version }} / ${{ matrix.php-version }} (${{ join(matrix.tags) }})
+#        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
