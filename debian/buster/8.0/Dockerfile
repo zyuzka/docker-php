@@ -6,11 +6,14 @@ FROM php:${SPRYKER_PHP_VERSION}-fpm-buster
 ARG COMPOSER_VERSION=2.1.9
 ARG BLACKFIRE_VERSION=1.57.0
 ARG NEWRELIC_VERSION=9.18.1.303
-ARG TIDEWAYS_VERSION=latest
+ARG TIDEWAYS_VERSION=5.4.28
 
 ENV srcRoot /data
 
 RUN mkdir -p ${srcRoot}
+
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 
 ARG PHP_RUN_DEPS="\
     libicu63 \
@@ -123,31 +126,19 @@ RUN curl -L "https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}
   && ln -s /lib64/ld-linux-x86-64.so.2 /lib/ld-linux-x86-64.so.2
 
 # Tideways
-RUN echo 'deb http://s3-eu-west-1.amazonaws.com/tideways/packages debian main' > /etc/apt/sources.list.d/tideways.list && \
-    curl -sS 'https://s3-eu-west-1.amazonaws.com/tideways/packages/EEB5E8F4.gpg' | apt-key add - && \
-    apt update -y && \
-    DEBIAN_FRONTEND=noninteractive apt -yq install tideways-php && \
-    apt autoremove --assume-yes && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN #bash -c 'if [ "${TARGETPLATFORM}" == "linux/amd64" ]; then echo "deb http://s3-eu-west-1.amazonaws.com/tideways/packages debian main" > /etc/apt/sources.list.d/tideways.list && \
+#   curl -sS "https://s3-eu-west-1.amazonaws.com/tideways/packages/EEB5E8F4.gpg" | apt-key add - && \
+#   apt update -y && \
+#   DEBIAN_FRONTEND=noninteractive apt -yq install tideways-php && \
+#   apt autoremove --assume-yes && \
+#   apt clean && \
+#   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*; fi'
 
-# Opcache
-RUN /usr/bin/install -d -m 777 /var/run/opcache
-
-# Remove default FPM pool
-RUN rm /usr/local/etc/php-fpm.d/www.conf && \
-    rm /usr/local/etc/php-fpm.d/docker.conf && \
-    rm /usr/local/etc/php-fpm.d/zz-docker.conf
-
-# Add FPM configs
-COPY context/php/php-fpm.d/worker.conf /usr/local/etc/php-fpm.d/worker.conf
-COPY context/php/php-fpm.conf  /usr/local/etc/php-fpm.conf
-
-# Copy php.ini configuration
-COPY context/php/php.ini /usr/local/etc/php/
-COPY context/php/conf.d/90-opcache.ini /usr/local/etc/php/conf.d/
-COPY context/php/conf.d/92-session.ini /usr/local/etc/php/conf.d/
-COPY context/php/disabled /usr/local/etc/php/disabled
+RUN bash -c 'if [ "${TARGETPLATFORM}" == "linux/arm64" ]; then version=$(php -r "echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;") \
+   && wget "https://s3-eu-west-1.amazonaws.com/tideways/extension/${TIDEWAYS_VERSION}/tideways-php-${TIDEWAYS_VERSION}-arm64.tar.gz" \
+   && tar xvzf tideways-php-${TIDEWAYS_VERSION}-arm64.tar.gz \
+   && cp ./tideways-${TIDEWAYS_VERSION}/tideways-php-${version}.so $(php-config --extension-dir)/tideways.so \
+   ; fi'
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION}
