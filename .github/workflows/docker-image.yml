@@ -17,15 +17,8 @@ jobs:
         run: echo "::set-output name=matrix::$(php .github/tag-builder/index.php)"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-
-  split_monorepo:
-    needs: create-tag-matrix
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: ${{ fromJson(needs.create-tag-matrix.outputs.matrix) }}
   build:
-    needs: provide_packages_json
+    needs: create-tag-matrix
     runs-on: ubuntu-latest
     env:
       ORGA: 'zyuzka'
