@@ -12,6 +12,9 @@ ENV srcRoot /data
 
 RUN mkdir -p ${srcRoot}
 
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
 ARG PHP_RUN_DEPS="\
     libicu63 \
     libbz2-1.0 \
