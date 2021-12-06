@@ -7,6 +7,7 @@ ARG COMPOSER_VERSION=2.1.9
 ARG BLACKFIRE_VERSION=1.57.0
 ARG NEWRELIC_VERSION=9.18.1.303
 ARG TIDEWAYS_VERSION=5.4.28
+ARG TIDEWAYS_PHP_VERSION=7.4
 
 ENV srcRoot /data
 
@@ -135,13 +136,7 @@ RUN bash -c 'if [ "${TARGETPLATFORM}" == "linux/amd64" ]; then echo "deb http://
 
 RUN bash -c 'if [ "${TARGETPLATFORM}" == "linux/arm64" ]; then wget "https://s3-eu-west-1.amazonaws.com/tideways/extension/${TIDEWAYS_VERSION}/tideways-php-${TIDEWAYS_VERSION}-arm64.tar.gz"; fi'
 RUN bash -c 'if [ "${TARGETPLATFORM}" == "linux/arm64" ]; then tar xvzf tideways-php-${TIDEWAYS_VERSION}-arm64.tar.gz; fi'
-RUN bash -c 'if [ "${TARGETPLATFORM}" == "linux/arm64" ]; then version=$(php -r "echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;") && cp ./tideways-${TIDEWAYS_VERSION}/tideways-php-${version}.so $(php-config --extension-dir)/tideways.so; fi'
-#
-#RUN bash -c 'if [ "${TARGETPLATFORM}" == "linux/arm64" ]; then version=$(php -r "echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;") \
-#   && wget "https://s3-eu-west-1.amazonaws.com/tideways/extension/${TIDEWAYS_VERSION}/tideways-php-${TIDEWAYS_VERSION}-arm64.tar.gz" \
-#   && tar xvzf tideways-php-${TIDEWAYS_VERSION}-arm64.tar.gz \
-#   && cp ./tideways-${TIDEWAYS_VERSION}/tideways-php-${version}.so $(php-config --extension-dir)/tideways.so \
-#   ; fi'
+RUN bash -c 'if [ "${TARGETPLATFORM}" == "linux/arm64" ]; then cp ./tideways-${TIDEWAYS_VERSION}/tideways-php-${TIDEWAYS_PHP_VERSION}.so $(php-config --extension-dir)/tideways.so; fi'
 
 # Opcache
 RUN /usr/bin/install -d -m 777 /var/run/opcache
