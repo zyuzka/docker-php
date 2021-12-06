@@ -5,10 +5,6 @@ use Symfony\Component\Yaml\Yaml;
 
 require 'vendor/autoload.php';
 
-$root = [];
-
-
-
 const ALPINE_DISTRO_NAME = 'alpine';
 const DEBIAN_DISTRO_NAME = 'debian';
 const AVAILABLE_DISTRO = [
