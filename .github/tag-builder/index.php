@@ -37,7 +37,6 @@ foreach ($finder->in(getDistroDirectoryPathPattern())->files()->name(DOCKERFILE)
     $result[] = buildMatrix($file, $organisationName, $specificTagsConfig);
 }
 
-var_dump($result);
 echo json_encode($result);
 
 /**
