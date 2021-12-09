@@ -17,6 +17,7 @@ const DISTRO_TAG_FORMATS = [
     ALPINE_DISTRO_NAME => '%s/php:%s-%s%s',
     DEBIAN_DISTRO_NAME => '%s/php:%s-%s-%s',
 ];
+const SPECIFIC_TAG_FORMAT = '%s/php:%s';
 
 const DOCKERFILE = 'Dockerfile';
 const IMAGE_KEY = 'image';
@@ -36,6 +37,7 @@ foreach ($finder->in(getDistroDirectoryPathPattern())->files()->name(DOCKERFILE)
     $result[] = buildMatrix($file, $organisationName, $specificTagsConfig);
 }
 
+var_dump($result);
 echo json_encode($result);
 
 /**
@@ -81,7 +83,7 @@ function buildTags(string $imagePath, string $organisationName, array $specificT
     }
 
     foreach ($specificTagsConfig[$imagePath] as $specificPhpVersion) {
-        $tags[] = sprintf($distroTagFormat, $organisationName, $specificPhpVersion, $distroName, $distroVersion);
+        $tags[] = sprintf(SPECIFIC_TAG_FORMAT, $organisationName, $specificPhpVersion);
     }
 
     return $tags;
