@@ -26,53 +26,36 @@ jobs:
       fail-fast: false
       matrix:
         include: ${{ fromJson(needs.create-tag-matrix.outputs.matrix) }}
-#        include:
-#          ### Alpine 3.11
-#          - image: 'alpine/3.11/7.3/Dockerfile'
-#            tags: [ "$ORGA/php:7.3-alpine3.11" ]
-#          - image: 'alpine/3.11/7.4/Dockerfile'
-#            tags: [ "$ORGA/php:7.4-alpine3.11" ]
-#
-#          ### Alpine 3.12
-#          - image: 'alpine/3.12/7.3/Dockerfile'
-#            tags: [ "$ORGA/php:latest", "$ORGA/php:7.3", "$ORGA/php:7.3-alpine3.12" ]
-#          - image: 'alpine/3.12/7.4/Dockerfile'
-#            tags: [ "$ORGA/php:7.4", "$ORGA/php:7.4-alpine3.12" ]
-#          - image: 'alpine/3.12/8.0/Dockerfile'
-#            tags: [ "$ORGA/php:8.0", "$ORGA/php:8.0-alpine3.12" ]
-#
-#          ### Alpine 3.13
-#          - image: 'alpine/3.13/7.4/Dockerfile'
-#            tags: [ "$ORGA/php:7.4-alpine3.13" ]
-#          - image: 'alpine/3.13/8.0/Dockerfile'
-#            tags: [ "$ORGA/php:8.0-alpine3.13" ]
-#
-#          ### Debian bullseye
-#          - image: 'debian/bullseye/7.3/Dockerfile'
-#            tags: [ "$ORGA/php:7.3-debian" ]
-#          - image: 'debian/bullseye/7.4/Dockerfile'
-#            tags: [ "$ORGA/php:7.4-debian" ]
-#          - image: 'debian/bullseye/8.0/Dockerfile'
-#            tags: [ "$ORGA/php:8.0-debian" ]
-#
-#          ### Debian buster
-#          - image: 'debian/buster/7.3/Dockerfile'
-#            tags: [ "$ORGA/php:7.3-debian-buster" ]
-#          - image: 'debian/buster/7.4/Dockerfile'
-#            tags: [ "$ORGA/php:7.4-debian-buster" ]
-#          - image: 'debian/buster/8.0/Dockerfile'
-#            tags: [ "$ORGA/php:8.0-debian-buster" ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
-        id: buildx
         uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-          version: latest
-      - name: Login to docker hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      - name: Install platform emulator collection
-        run: docker run --privileged --rm tonistiigi/binfmt --install all
-      - name: Build images
-        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          file: ${{ matrix.image }}
+          tags: ${{ join(matrix.tags) }}
+          platforms: linux/amd64,linux/arm64
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v1
+#        with:
+#          version: latest
+#      - name: Login to docker hub
+#        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+#      - name: Install platform emulator collection
+#        run: docker run --privileged --rm tonistiigi/binfmt --install all
+#      - name: Build images
+#        run: docker buildx build --push . --file ${{ matrix.image }} --tag ${{ join(matrix.tags, ' --tag ') }} --platform linux/amd64,linux/arm64

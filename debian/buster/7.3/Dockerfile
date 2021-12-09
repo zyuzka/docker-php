@@ -105,7 +105,8 @@ RUN apt update -y \
 # Blackfire
 ENV BLACKFIRE_AGENT_SOCKET=''
 RUN version=$(php -r "echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire.so -D - -L -s https://packages.blackfire.io/binaries/blackfire-php/${BLACKFIRE_VERSION}/blackfire-php-linux_amd64-php-$version.so \
+    && architecture=$(case $(uname -m) in i386 | i686 | x86) echo "i386" ;; x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -A "Docker" -o /tmp/blackfire.so -D - -L -s https://packages.blackfire.io/binaries/blackfire-php/${BLACKFIRE_VERSION}/blackfire-php-linux_${architecture}-php-$version.so \
     && mv /tmp/blackfire.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so
 
 # New Relic
