@@ -22,10 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ORGA: 'zyuzka'
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.create-tag-matrix.outputs.matrix) }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        include: ${{ fromJson(needs.create-tag-matrix.outputs.matrix) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
