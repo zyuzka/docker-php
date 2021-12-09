@@ -5,6 +5,7 @@ FROM php:${SPRYKER_PHP_VERSION}-fpm-buster
 
 ARG COMPOSER_VERSION=2.1.9
 ARG BLACKFIRE_VERSION=1.57.0
+ARG BLACKFIRE_PHP_VERSION=8.0
 ARG NEWRELIC_VERSION=9.18.1.303
 ARG TIDEWAYS_VERSION=5.4.28
 ARG TIDEWAYS_PHP_VERSION=8.0
@@ -103,9 +104,8 @@ RUN apt update -y \
 
 # Blackfire
 ENV BLACKFIRE_AGENT_SOCKET=''
-RUN version=$(php -r "echo PHP_MAJOR_VERSION . PHP_MINOR_VERSION;") \
-    && architecture=$(case $(uname -m) in i386 | i686 | x86) echo "i386" ;; x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-    && curl -A "Docker" -o /tmp/blackfire.so -D - -L -s https://packages.blackfire.io/binaries/blackfire-php/${BLACKFIRE_VERSION}/blackfire-php-linux_${architecture}-php-$version.so \
+RUN architecture=$(case $(uname -m) in i386 | i686 | x86) echo "i386" ;; x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -A "Docker" -o /tmp/blackfire.so -D - -L -s https://packages.blackfire.io/binaries/blackfire-php/${BLACKFIRE_VERSION}/blackfire-php-linux_${architecture}-php-${BLACKFIRE_PHP_VERSION}.so \
     && mv /tmp/blackfire.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so
 
 # NewRelic release for PHP8 in progress
