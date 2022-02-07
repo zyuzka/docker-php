@@ -17,6 +17,7 @@ const DISTRO_TAG_FORMATS = [
     ALPINE_DISTRO_NAME => '%s/php:%s-%s%s',
     DEBIAN_DISTRO_NAME => '%s/php:%s-%s-%s',
 ];
+const SPECIFIC_TAG_FORMAT = '%s/php:%s';
 
 const DOCKERFILE = 'Dockerfile';
 const IMAGE_KEY = 'image';
@@ -24,7 +25,7 @@ const TAGS_KEY = 'tags';
 
 const SPECIFIC_PHP_TAGS_FILE_PATH = './.github/tag-builder/specific-php-tags.yml';
 
-$organisationName = getenv('ORGANISATION') ?: 'zyuzka';
+$organisationName = getenv('ORGANISATION');
 
 $finder = new Finder();
 $parser = new Yaml();
@@ -81,7 +82,7 @@ function buildTags(string $imagePath, string $organisationName, array $specificT
     }
 
     foreach ($specificTagsConfig[$imagePath] as $specificPhpVersion) {
-        $tags[] = sprintf($distroTagFormat, $organisationName, $specificPhpVersion, $distroName, $distroVersion);
+        $tags[] = sprintf(SPECIFIC_TAG_FORMAT, $organisationName, $specificPhpVersion);
     }
 
     return $tags;

@@ -7,6 +7,8 @@ on:
 jobs:
   create-tag-matrix:
     runs-on: ubuntu-latest
+    env:
+      ORGANISATION: 'zyuzka'
     steps:
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
