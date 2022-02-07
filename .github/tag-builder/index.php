@@ -24,7 +24,7 @@ const TAGS_KEY = 'tags';
 
 const SPECIFIC_PHP_TAGS_FILE_PATH = './.github/tag-builder/specific-php-tags.yml';
 
-$organisationName = getenv('ORGANISATION') ?: 'zyuzka';;
+$organisationName = getenv('ORGANISATION') ?: 'zyuzka';
 
 $finder = new Finder();
 $parser = new Yaml();
