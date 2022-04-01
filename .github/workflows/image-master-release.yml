@@ -20,9 +20,9 @@ jobs:
       - run: git submodule update --init --force
       - run: composer install --working-dir=.github/tag-builder/
       - name: Set env
-        run: export ORGANISATION=${GITHUB_REPOSITORY_OWNER}
+        run: export ORGANISATION=$(echo ${GITHUB_REPOSITORY_OWNER})
       - name: Test
-        run: echo ${ORGANISATION} && ${GITHUB_REPOSITORY_OWNER}
+        run: echo ${ORGANISATION}
       - id: set-matrix
         run: echo "::set-output name=matrix::$(php .github/tag-builder/index.php build)"
     outputs:
