@@ -22,7 +22,7 @@ jobs:
       - name: Set env
         run: export ORGANISATION=${GITHUB_REPOSITORY_OWNER}
       - name: Test
-        run: echo $ORGANISATION
+        run: echo ${ORGANISATION} && ${GITHUB_REPOSITORY_OWNER}
       - id: set-matrix
         run: echo "::set-output name=matrix::$(php .github/tag-builder/index.php build)"
     outputs:
