@@ -20,7 +20,7 @@ jobs:
       - run: git submodule update --init --force
       - run: composer install --working-dir=.github/tag-builder/
       - name: Set env
-        run: export ORGANISATION=$(echo ${GITHUB_REPOSITORY_OWNER})
+        run: echo "ORGANISATION=$(echo ${GITHUB_REPOSITORY_OWNER})" >> $GITHUB_ENV
       - name: Test
         run: echo ${ORGANISATION}
       - id: set-matrix
