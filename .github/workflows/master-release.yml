@@ -38,11 +38,12 @@ jobs:
       matrix:
         include: ${{ fromJson(needs.create-tag-matrix.outputs.matrix) }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.GIT_AUTH_TOKEN }}
-          submodules: true
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#        with:
+#          token: ${{ secrets.GIT_AUTH_TOKEN }}
+#          submodules: true
+#      - run: git submodule update --init --force
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
