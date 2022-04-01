@@ -7,8 +7,8 @@ on:
 jobs:
   create-tag-matrix:
     runs-on: ubuntu-latest
-    env:
-      ORGANISATION: ${{ env.GITHUB_REPOSITORY_OWNER }}
+#    env:
+#      ORGANISATION: ${{ env.GITHUB_REPOSITORY_OWNER }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -19,6 +19,8 @@ jobs:
           php-version: 7.4
       - run: git submodule update --init --force
       - run: composer install --working-dir=.github/tag-builder/
+      - name: Set env
+        run: export ORGANISATION=${GITHUB_REPOSITORY_OWNER}
       - id: set-matrix
         run: echo "::set-output name=matrix::$(php .github/tag-builder/index.php build)"
     outputs:
