@@ -13,21 +13,23 @@ jobs:
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.GIT_AUTH_TOKEN }}
-          submodules: true
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'zyuzka/tag-builder'
+          token: ${{ secrets.GIT_AUTH_TOKEN }}
 
       - uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
 
-      - run: git submodule update --init --force
-
-      - run: composer install --working-dir=.github/tag-builder/
+      - run: composer install --working-dir=./tag-builder/
 
       - name: Set ORGANISATION env variable
         run: echo "ORGANISATION=$(echo ${GITHUB_REPOSITORY_OWNER})" >> $GITHUB_ENV
 
       - id: set-matrix
-        run: echo "::set-output name=matrix::$(php .github/tag-builder/index.php build)"
+        run: echo "::set-output name=matrix::$(php ./tag-builder/index.php -a build -c ./config.yml)"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
   build:
