@@ -19,7 +19,7 @@ jobs:
       - run: git submodule update --init --force
       - run: composer install --working-dir=.github/tag-builder/
       - id: set-matrix
-        run: echo "::set-output name=matrix::$(php .github/tag-builder/index.php)"
+        run: echo "::set-output name=matrix::$(php .github/tag-builder/index.php build)"
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 #  build:
