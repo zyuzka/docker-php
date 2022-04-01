@@ -9,12 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          name: id_rsa
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_AUTH_TOKEN }}
+          submodules: true
+
+      # Update references
+      - name: Git Sumbodule Update
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
