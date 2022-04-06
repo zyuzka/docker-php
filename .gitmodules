@@ -1,3 +1,0 @@
-[submodule ".github/tag-builder"]
-	path = .github/tag-builder
-	url = git@github.com:zyuzka/tag-builder.git
