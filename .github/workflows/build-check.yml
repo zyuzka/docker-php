@@ -66,6 +66,14 @@ jobs:
           path: /tmp
       - name: Load Docker image
         run: |
-          docker load --input /tmp/zyuzka-php-7-3-arm.tar
-          docker load --input /tmp/zyuzka-php-7-3-amd.tar
+          touch /tmp/test.txt
+          docker load --input /tmp/zyuzka-php-7-3-arm.tar >> /tmp/test.txt
+          docker load --input /tmp/zyuzka-php-7-3-amd.tar >> /tmp/test.txt
           docker image ls -a
+          cat /tmp/test.txt
+
+#          docker manifest create \
+#          your-username/multiarch-example:manifest-latest \
+#          --amend your-username/multiarch-example:manifest-amd64 \
+#          --amend your-username/multiarch-example:manifest-arm32v7 \
+#          --amend your-username/multiarch-example:manifest-arm64v8
