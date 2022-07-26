@@ -39,7 +39,6 @@ jobs:
           platforms: ${{ join(matrix.platforms) }}
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
-                    context: ./frontend
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
           outputs: type=oci,dest=/tmp/${{matrix.tar-name}}.tar
