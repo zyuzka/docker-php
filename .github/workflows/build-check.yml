@@ -15,12 +15,12 @@ jobs:
           - image: 'alpine/3.12/7.3/Dockerfile'
             tar-name: 'zyuzka-php-7-3-arm'
             os: ARM64
-            tags: [ 'spryker/php:7.3',]
+            tags: [ 'spryker/php:7.3-arm',]
             platforms: [ "linux/arm64" ]
           - image: 'alpine/3.12/7.3/Dockerfile'
             tar-name: 'zyuzka-php-7-3-amd'
             os: ubuntu-latest
-            tags: [ 'spryker/php:7.3' ]
+            tags: [ 'spryker/php:7.3-amd' ]
             platforms: [ "linux/amd64" ]
     steps:
       - name: Set up QEMU
@@ -39,6 +39,8 @@ jobs:
           platforms: ${{ join(matrix.platforms) }}
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
           outputs: type=docker,dest=/tmp/${{matrix.tar-name}}.tar
       - name: Upload artifact
         uses: actions/upload-artifact@v3
