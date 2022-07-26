@@ -66,11 +66,10 @@ jobs:
           path: /tmp
       - name: Load Docker image
         run: |
-          touch /tmp/test.txt
+          docker rmi -f $(docker images -aq)
           docker load --input /tmp/zyuzka-php-7-3-arm.tar >> /tmp/test.txt
           docker load --input /tmp/zyuzka-php-7-3-amd.tar >> /tmp/test.txt
           docker image ls -a
-          cat /tmp/test.txt
 
 #          docker manifest create \
 #          your-username/multiarch-example:manifest-latest \
