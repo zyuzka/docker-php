@@ -43,6 +43,11 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
           outputs: type=oci,dest=/tmp/${{matrix.tar-name}}.tar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{matrix.tar-name}}
+          path: /tmp/${{matrix.tar-name}}.tar
   use:
     runs-on: ubuntu-latest
     needs: build
