@@ -58,12 +58,12 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: zyuzka-php-7-3-amd.tar
+          name: zyuzka-php-7-3-amd
           path: /tmp
       - name: Download artifact2
         uses: actions/download-artifact@v2
         with:
-          name: zyuzka-php-7-3-arm.tar
+          name: zyuzka-php-7-3-arm
           path: /tmp
       - name: Load Docker image
         run: |
