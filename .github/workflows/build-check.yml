@@ -15,7 +15,7 @@ jobs:
           ## Alpine
           ### Alpine 3.12
           - image: 'alpine/3.12/7.3/Dockerfile'
-            os: [ubuntu-latest, self-hosted]
+            os: [ubuntu-latest, arm-runner]
             tags: [ 'spryker/php:latest', 'spryker/php:7.3', 'spryker/php:7.3-alpine3.12' ]
             platform: [ "linux/amd64", "linux/arm64" ]
 
