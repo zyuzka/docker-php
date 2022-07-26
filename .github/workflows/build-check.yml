@@ -20,9 +20,6 @@ jobs:
             platform: [ "linux/amd64", "linux/arm64" ]
 
     steps:
-      - name: setup-docker
-        uses: docker-practice/actions-setup-docker@master
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
