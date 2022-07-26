@@ -15,12 +15,12 @@ jobs:
           - image: 'alpine/3.12/7.3/Dockerfile'
             tar-name: 'zyuzka-php-7-3-arm'
             os: ARM64
-            tags: [ 'spryker/php:7.3-arm',]
+            tags: [ 'zyuzka/php:7.3-arm',]
             platforms: [ "linux/arm64" ]
           - image: 'alpine/3.12/7.3/Dockerfile'
             tar-name: 'zyuzka-php-7-3-amd'
             os: ubuntu-latest
-            tags: [ 'spryker/php:7.3-amd' ]
+            tags: [ 'zyuzka/php:7.3-amd' ]
             platforms: [ "linux/amd64" ]
     steps:
       - name: Set up QEMU
@@ -77,7 +77,7 @@ jobs:
 
           docker manifest create \
             zyuzka/php:7.3 \
-            --amend spryker/php:7.3-arm \
-            --amend spryker/php:7.3-amd
+            --amend zyuzka/php:7.3-arm \
+            --amend zyuzka/php:7.3-amd
           
           docker manifest push zyuzka/php:7.3
