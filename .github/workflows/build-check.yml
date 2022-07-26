@@ -64,14 +64,20 @@ jobs:
         with:
           name: zyuzka-php-7-3-arm
           path: /tmp
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Load Docker image
         run: |
           docker load --input /tmp/zyuzka-php-7-3-arm.tar
           docker load --input /tmp/zyuzka-php-7-3-amd.tar
           docker image ls -a
 
-#          docker manifest create \
-#          your-username/multiarch-example:manifest-latest \
-#          --amend your-username/multiarch-example:manifest-amd64 \
-#          --amend your-username/multiarch-example:manifest-arm32v7 \
-#          --amend your-username/multiarch-example:manifest-arm64v8
+          docker manifest create \
+            zyuzka/php:7.3 \
+            --amend spryker/php:7.3-arm \
+            --amend spryker/php:7.3-amd
+          
+          docker manifest push zyuzka/php:7.3
