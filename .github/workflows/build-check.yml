@@ -12,17 +12,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          ## Alpine
-          ### Alpine 3.12
           - image: 'alpine/3.12/7.3/Dockerfile'
-            os: [ARM64]
+            tar-name: 'zyuzka-php-7-3-arm'
+            os: ARM64
             tags: [ 'spryker/php:7.3',]
             platforms: [ "linux/arm64" ]
           - image: 'alpine/3.12/7.3/Dockerfile'
-            os: [ ubuntu-latest ]
+            tar-name: 'zyuzka-php-7-3-amd'
+            os: ubuntu-latest
             tags: [ 'spryker/php:7.3' ]
             platforms: [ "linux/amd64" ]
-
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -40,3 +39,29 @@ jobs:
           platforms: ${{ join(matrix.platforms) }}
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
+                    context: ./frontend
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+          outputs: type=oci,dest=/tmp/${{matrix.tar-name}}.tar
+  use:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: zyuzka-php-7-3-amd.tar
+          path: /tmp
+      - name: Download artifact2
+        uses: actions/download-artifact@v2
+        with:
+          name: zyuzka-php-7-3-arm.tar
+          path: /tmp
+      - name: Load Docker image
+        run: |
+          docker load --input /tmp/zyuzka-php-7-3-arm.tar
+          docker load --input /tmp/zyuzka-php-7-3-amd.tar
+          docker image ls -a
