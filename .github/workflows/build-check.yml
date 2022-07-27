@@ -61,6 +61,9 @@ jobs:
 
       - name: Load Docker image
         run: |
+          docker pull zyuzka/php:7.3-amd
+          docker pull zyuzka/php:7.3-arm
+          
           docker manifest create \
             zyuzka/php:7.3-merge \
             --amend zyuzka/php:7.3-amd \
