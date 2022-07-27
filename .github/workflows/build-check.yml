@@ -30,6 +30,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
@@ -40,36 +46,36 @@ jobs:
           platforms: ${{ join(matrix.platforms) }}
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
-          outputs: type=docker,dest=/tmp/${{matrix.tar-name}}.tar
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{matrix.tar-name}}
-          path: /tmp/${{matrix.tar-name}}.tar
+#          cache-from: type=local,src=/tmp/.buildx-cache
+#          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+#          outputs: type=docker,dest=/tmp/${{matrix.tar-name}}.tar
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{matrix.tar-name}}
+#          path: /tmp/${{matrix.tar-name}}.tar
   use:
     runs-on: ubuntu-latest
     needs: build
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: zyuzka-php-7-3-amd
-          path: /tmp
-      - name: Download artifact2
-        uses: actions/download-artifact@v3
-        with:
-          name: zyuzka-php-7-3-arm
-          path: /tmp
+#      - name: Download artifact
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: zyuzka-php-7-3-amd
+#          path: /tmp
+#      - name: Download artifact2
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: zyuzka-php-7-3-arm
+#          path: /tmp
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -77,18 +83,18 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Load Docker image
         run: |
-          docker load --input /tmp/zyuzka-php-7-3-arm.tar
-          docker load --input /tmp/zyuzka-php-7-3-amd.tar
-          docker image ls -a
-          
-          docker tag zyuzka/php:7.3-arm localhost:5000/zyuzka/php:7.3-arm
-          docker tag zyuzka/php:7.3-amd localhost:5000/zyuzka/php:7.3-amd
-          docker push localhost:5000/zyuzka/php:7.3-amd
-          docker push localhost:5000/zyuzka/php:7.3-arm
+#          docker load --input /tmp/zyuzka-php-7-3-arm.tar
+#          docker load --input /tmp/zyuzka-php-7-3-amd.tar
+#          docker image ls -a
+#
+#          docker tag zyuzka/php:7.3-arm localhost:5000/zyuzka/php:7.3-arm
+#          docker tag zyuzka/php:7.3-amd localhost:5000/zyuzka/php:7.3-amd
+#          docker push zyuzka/php:7.3-amd
+#          docker push zyuzka/php:7.3-arm
 
           docker manifest create \
-            zyuzka/php:7.3 \
-            --amend localhost:5000/zyuzka/php:7.3-amd \
-            --amend localhost:5000/zyuzka/php:7.3-arm
+            zyuzka/php:7.3-merge \
+            --amend zyuzka/php:7.3-amd \
+            --amend zyuzka/php:7.3-arm
           
-          docker manifest push zyuzka/php:7.3
+          docker manifest push zyuzka/php:7.3-merge
